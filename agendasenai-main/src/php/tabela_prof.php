@@ -1,0 +1,112 @@
+<!-- A tabela precisa ter os seguintes itens:
+ Nome Professor;
+ Turno;
+ Competencias a serem atendidas na UC;
+ UC que atende.
+
+ Outras funções a serem adicionada futuramente -->
+ <?php
+ 
+ ?>
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../bootstrap/bootstrap.css" >
+ </head>
+ <body>
+<!-- aqui começa a navbar-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <!-- Logo / Título -->
+    <a class="navbar-brand" style="color:black" href="dashboard.php">AGENDA SENAI</a>
+
+    <!-- Formulário de busca -->
+    <form class="d-flex" role="search" method ="POST">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+      <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+
+    <!-- Link de logout -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div style="position: absolute; right: 50px; top: 65px;">
+  <form action="" method = "POST">
+    <div><h2>Cadastro</h2></div> 
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="professor" placeholder="Professor" name = "nome" required>
+      <label for="professor">Professor</label>
+    </div>
+    <div class="form-floating">
+      <input type="text" class="form-control" id="turno" placeholder="Turno" name = "turno" required>
+      <label for="turno">Turno</label>
+    </div>
+    <br>
+    <select class="form-select" aria-label="Default select example">
+  <option selected>Matéria</option>
+  <option value="1">Automação</option>
+  <option value="2">DS</option>
+  <option value="3">Mecatrônica</option>
+</select>
+    <br>
+    <select class="form-select" aria-label="Default select example">
+  <option selected>Competências</option>
+  <option value="1">Lógica de Programação</option>
+  <option value="2">maozinha</option>
+  <option value="3">anao</option>
+</select>
+    <br>
+  <button class="btn btn-primary" type="submit" id="btn-cadastrar">Cadastro</button>
+</div>
+</form>
+
+<!-- Tabela dinâmica de professores cadastrados -->
+<div id="prof-table-wrapper" style="position: absolute; left: 15px; top: 70px; width: 1000px;">
+  <table class="table table-bordered" id="prof-table" style="background: #fff;">
+    <thead>
+      <tr>
+        <th>Professores</th>
+        <th>Turno</th>
+        <th>Matéria</th>
+        <th>Competências</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Linhas serão inseridas aqui -->
+    </tbody>
+  </table>
+</div>
+</div>
+<table class="table"
+   style="position: fixed; bottom: -5px; right: 60px; width: 200px; font-size: 14px;">
+  <thead>
+    <tr>
+      <th scope="col">Turno</th>
+      <th scope="col">ID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Manhã</th>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th scope="row">Tarde</th>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th scope="row">Noite</th>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+ </body>
+ </html>
+ <style>
