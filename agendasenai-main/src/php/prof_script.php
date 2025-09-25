@@ -10,13 +10,16 @@
  <body>
  
  <?php
-    include "conexao.php";
+    include "conexao_db.php";
+
     $nomeprof = $_POST['nomeprof'];
     $turnos = $_POST['turnos'];
-    $UCs = $_POST['UCs'];
+    $UCs = $_POST['UCs'] ;
     $competencias = $_POST['competencias'];
+   
 
     $sql = "INSERT INTO `professor`(`nomeprof`, `turnos`, `UCs`, `competencias`) VALUES ('$nomeprof','$turnos','$UCs','$competencias')";
+    
     if(mysqli_query($conn, $sql)){
         echo "$nomeprof cadastrado com sucesso!";
     }else

@@ -38,27 +38,27 @@
   </div>
 </nav>
 <div style="position: absolute; right: 50px; top: 65px;">
-  <form action="" method = "POST">
+  <form action="prof_script.php" method = "POST">
     <div><h2>Cadastro</h2></div> 
     <div class="form-floating mb-3">
-      <input type="text" class="form-control" id="professor" placeholder="Professor" name = "nome" required>
+      <input type="text" class="form-control" id="professor" placeholder="Professor" name = "nomeprof" required>
       <label for="professor">Professor</label>
     </div>
     <div class="form-floating">
-      <input type="text" class="form-control" id="turno" placeholder="Turno" name = "turno" required>
+      <input type="text" class="form-control" id="turno" placeholder="Turno" name = "turnos" >
       <label for="turno">Turno</label>
     </div>
     <br>
-    <select class="form-select" aria-label="Default select example">
+    <select class="form-select" aria-label="Default select example" name="UCs">
   <option selected>Matéria</option>
   <option value="1">Automação</option>
   <option value="2">DS</option>
   <option value="3">Mecatrônica</option>
 </select>
     <br>
-    <select class="form-select" aria-label="Default select example">
+    <select class="form-select" aria-label="Default select example"name="competencias">
   <option selected>Competências</option>
-  <option value="1">Lógica de Programação</option>
+  <option value="Lógica de Programação">Lógica de Programação</option>
   <option value="2">maozinha</option>
   <option value="3">anao</option>
 </select>
