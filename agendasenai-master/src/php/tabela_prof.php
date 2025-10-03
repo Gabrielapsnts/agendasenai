@@ -15,9 +15,9 @@ $sql = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search']) && !empty(trim($_POST['search']))) {
     $searchTerm = $conn->real_escape_string(trim($_POST['search']));
-    $sql = "SELECT nomeprof, turnos, UCs, competencias FROM professor WHERE nomeprof LIKE '%$searchTerm%'";
+    $sql = "SELECT id_prof, nomeprof, turnos, UCs, competencias FROM professor WHERE nomeprof LIKE '%$searchTerm%'";
 } else {
-    $sql = "SELECT nomeprof, turnos, UCs, competencias FROM professor";
+    $sql = "SELECT id_prof, nomeprof, turnos, UCs, competencias FROM professor";
 }
 
 $result = $conn->query($sql);
@@ -78,7 +78,9 @@ if (!$result) {
       <label for="turno">Turno</label>
     </div>
     <br>
-    <select class="form-select" aria-label="Matérias" name="UCs" required>
+    <!-- Seleção de Curso -->
+<label for="curso">Curso:</label>
+<select id="curso" class="form-select" name="UCs" required>
   <option value="" selected disabled hidden>Cursos</option>
   <option value="Mecânica">Mecânica</option>
   <option value="Mecatrônica">Mecatrônica</option>
@@ -87,13 +89,63 @@ if (!$result) {
   <option value="Automação">Automação</option>
   <option value="Administração">Administração</option>
 </select>
-    <br>
-    <select class="form-select" aria-label="Default select example"name="competencias">
-   <option value="" selected disabled hidden>Competências</option>
-  <option value="Lógica de Programação">Lógica de Programação</option>
-  <option value="maozinha">maozinha</option>
-  <option value="anao">anao</option>
-</select>
+
+<br><br>
+
+<!-- Checkboxes de Competências -->
+<div id="competencias-container">
+  <strong>Selecione um curso para ver as competências</strong>
+</div>
+
+<script>
+  const competenciasPorCurso = {
+    "Mecânica": ["Leitura de Projetos", "Usinagem", "Metrologia"],
+    "Mecatrônica": ["Eletrônica Básica", "Sistemas Embarcados", "Automação"],
+    "Desenvolvimento de Sistemas": ["Internet das Coisas", "Programa de Aplicativos", "Banco de Dados", "Desenvolvimento de Sistemas", "Moedelagem de Sistemas", "Teste de Sistemas"],
+    "Eletromecânica": ["Circuitos Elétricos", "Comandos Elétricos"],
+    "Automação": ["Sensores", "Atuadores"],
+    "Administração": ["Gestão Orgânica", "Marketing", "Contabilidade"]
+  };
+
+  const cursoSelect = document.getElementById('curso');
+  const competenciasContainer = document.getElementById('competencias-container');
+
+  cursoSelect.addEventListener('change', function () {
+    const cursoSelecionado = this.value;
+    const competencias = competenciasPorCurso[cursoSelecionado] || [];
+
+    // Limpa competências anteriores
+    competenciasContainer.innerHTML = '';
+
+    if (competencias.length === 0) {
+      competenciasContainer.innerHTML = '<strong>Nenhuma competência disponível.</strong>';
+      return;
+    }
+
+    // Cria checkboxes
+    competencias.forEach((comp, index) => {
+      const checkboxId = `comp${index}`;
+
+      const label = document.createElement('label');
+      label.setAttribute('for', checkboxId);
+      label.style.display = 'block'; // Coloca cada checkbox em uma linha
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.name = 'competencias[]';
+      checkbox.value = comp;
+      checkbox.id = checkboxId;
+
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(' ' + comp));
+
+      competenciasContainer.appendChild(label);
+    });
+  });
+</script>
+
+
+
     <br>
   <button class="btn btn-primary" type="submit" id="btn-cadastrar">Cadastro</button>
 </div>
@@ -103,13 +155,16 @@ if (!$result) {
 <div id="prof-table-wrapper" style="position: absolute; left: 15px; top: 70px; width: 1000px;">
   <table class="table table-bordered" id="prof-table" style="background: #fff;">
     <thead>
-      <tr>
-        <th>Professores</th>
-        <th>Turno</th>
-        <th>Matéria</th>
-        <th>Competências</th>
-      </tr>
-    </thead>
+  <tr>
+    <th>Professores</th>
+    <th>Turno</th>
+    <th>Cursos</th>
+    <th>Competências</th>
+    <th>Ações</th> <!-- Nova coluna -->
+  
+  </tr>
+</thead>
+
     <tbody>
 
       <!-- pega todos os professores do banco e cria as linhas da tabela na página -->
@@ -123,18 +178,31 @@ if ($result === false) {
 }
 
 // Verifica se retornou resultados
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($row["nomeprof"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["turnos"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["UCs"]) . "</td>";
-        echo "<td>" . htmlspecialchars($row["competencias"]) . "</td>";
-        echo "</tr>";
+while($row = $result->fetch_assoc()) {
+    echo "<tr>";
+    echo "<td>" . htmlspecialchars($row["nomeprof"]) . "</td>";
+    echo "<td>" . htmlspecialchars($row["turnos"]) . "</td>";
+    echo "<td>" . htmlspecialchars($row["UCs"]) . "</td>";
+
+    $competencias = explode(',', $row["competencias"]);
+    echo "<td>
+            <ul style='max-height: 120px; overflow-y: auto; padding-left: 20px; margin: 0;'>";
+    foreach ($competencias as $comp) {
+        echo "<li>" . htmlspecialchars(trim($comp)) . "</li>";
     }
-} else {
-    echo "<tr><td colspan='4'>Nenhum professor encontrado</td></tr>";
+    echo "</ul></td>";
+
+    // Coluna de Ações com botão de excluir
+    echo "<td>
+            <form method='POST' action='excluir_professor.php' onsubmit=\"return confirm('Tem certeza que deseja excluir este professor?');\">
+              <input type='hidden' name='id_prof' value='" . $row['id_prof'] . "' />
+              <button type='submit' class='btn btn-danger btn-sm'>Excluir</button>
+            </form>
+          </td>";
+
+    echo "</tr>";
 }
+
 ?>
 
       <!-- Linhas serão inseridas aqui -->

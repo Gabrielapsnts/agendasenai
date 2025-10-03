@@ -15,7 +15,7 @@
     $nomeprof = $_POST['nomeprof'];
     $turnos = $_POST['turnos'];
     $UCs = $_POST['UCs'] ;
-    $competencias = $_POST['competencias'];
+    $competencias = $_POST['competencias'] ? implode(', ', $_POST['competencias']) :'';
    
 
     $sql = "INSERT INTO `professor`(`nomeprof`, `turnos`, `UCs`, `competencias`) VALUES ('$nomeprof','$turnos','$UCs','$competencias')";
