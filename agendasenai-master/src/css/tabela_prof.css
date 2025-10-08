@@ -1,0 +1,27 @@
+body {
+    position: relative;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .navbar-header {
+    position: absolute;
+    top: 00px; /* Distância do topo da página */
+    left: 20px; /* Alterado para a esquerda */
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+  }
+  
+ .navbar-blue {
+    background-color: #0a0d8d;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-link {
+    color: #000000;
+  }
+
+  
+
