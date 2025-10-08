@@ -28,8 +28,9 @@
     </ul>
   </div>
 </nav>
-
-  <div class="calendar-container">
+<div class="calendar-wrapper" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding: 20px;">
+  <!-- Calendário -->
+  <div class="calendar-container" style="flex-grow: 1;">
     <div class="calendar-header">
       <button onclick="changeMonth(-1)">← Mês Anterior</button>
       <h1 id="monthYear"></h1>
@@ -47,11 +48,29 @@
           <th>Sáb</th>
         </tr>
       </thead>
-      <tbody id="calendarBody">
-        <!-- Dias serão gerados aqui -->
-      </tbody>
+      <tbody id="calendarBody"></tbody>
     </table>
   </div>
+
+  <!-- Seleção de Professor + Formulário -->
+<div class="select-container" style="min-width: 300px;">
+  <label for="curso">Professor:</label>
+  <select id="nomeprof" class="form-select" name="Professores" required>
+  </select>
+
+  <!-- Formulário logo abaixo -->
+  <form style="margin-top: 15px;">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Enviar para</label>
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      <div id="emailHelp" class="form-text">Insira o email corporativo do(a) professor(a)</div>
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+
+
 
   <script>
     const monthYear = document.getElementById('monthYear');
@@ -113,12 +132,7 @@
       currentDate.setMonth(currentDate.getMonth() + offset);
       renderCalendar();
     }
-
     renderCalendar();
-
-    
   </script>
-
-  
 </body>
 </html>
