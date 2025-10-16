@@ -13,8 +13,8 @@ body {
     color: #000000;
   }
   
-  .navbar-white {
-    background-color: #ffffff;
+ .navbar-blue {
+    background-color: #0a0d8d;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
@@ -23,10 +23,5 @@ body {
     color: #000000;
   }
 
-  .nav-link.active {
-    color: #0d6efd;
-  }
+  
 
-  .nav-link.disabled {
-    color: #6c757d;
-  }

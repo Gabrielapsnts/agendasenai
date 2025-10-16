@@ -53,14 +53,14 @@
   <div class="login-box login-align-right">
       <img src="https://portaldecompras.sistemafiep.org.br/media/Sistema-Fiep-Azul.png" style="max-width: 200px; max-height: 200px; display: block; margin: 0 auto 16px auto; border-color: rgb(255, 255, 255);" class="img-thumbnail" alt="...">
       <h3 style="font-style:oblique; text-align:center; margin-bottom: 24px;">LOGIN</h3>
-      <form action="dashboard.php" method="post">
+      <form action="login_script.php" method="post">
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Usuário</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Digite um email válido">
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Digite um email válido" name="usuario" required>
         </div>
         <div class="mb-3 position-relative">
           <label for="exampleInputPassword1" class="form-label">Senha</label>
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Digite sua senha">
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Digite sua senha" name="senha" required>
 
 
 
