@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color:#000000;
+    text-align: center;
+}
+body {
+    position: relative;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .navbar-header {
+    position: absolute;
+    top: 00px; /* Distância do topo da página */
+    left: 20px; /* Alterado para a esquerda */
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+  }
+  
+  .navbar-white {
+    background-color: #0a0d8d;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-link {
+    color: #000000;
+  }
+
+  .nav-link.active {
+    color: #0d6efd;
+  }
+
+  .nav-link.disabled {
+    color: #6c757d;
+  }
+
+ 
