@@ -75,6 +75,12 @@ include "../includes/navbar.php";
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Turno:</label>
+                        <select name="turno" id="form_turno" class="form-select">
+                            <option value="">-- selecione o turno --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Data Início:</label>
                         <input type="date" name="data_inicio" class="form-control" required>
                     </div>
