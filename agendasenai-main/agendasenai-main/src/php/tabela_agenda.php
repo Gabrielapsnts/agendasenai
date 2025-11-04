@@ -1,147 +1,7 @@
 <?php
-include "conexao_db.php";
-
-// ----------------- Buscar professores -----------------
-$sqlAllProf = "SELECT id_prof, nomeprof FROM professor ORDER BY nomeprof ASC";
-$resAllProf = $conn->query($sqlAllProf);
-
-$idsByName = [];
-$profNameById = [];
-
-if ($resAllProf) {
-    while ($r = $resAllProf->fetch_assoc()) {
-        $id = $r['id_prof'];
-        $name = trim($r['nomeprof']);
-        $profNameById[$id] = $name;
-        if (!isset($idsByName[$name])) $idsByName[$name] = [];
-        $idsByName[$name][] = $id;
-    }
-}
-
-// Criar lista de professores únicos
-$professores = [];
-foreach ($idsByName as $name => $ids) {
-    $professores[] = [
-        'id_prof' => intval($ids[0]),
-        'nomeprof' => $name,
-        'all_ids' => $ids
-    ];
-}
-
-// ----------------- Buscar cursos e competências -----------------
-$sqlCursos = "
-    SELECT 
-        p.id_prof, uc.iduc, uc.nomeuc, c.idcomp, c.nomecomp
-    FROM professor p
-    JOIN professor_uc puc ON p.id_prof = puc.id_prof
-    JOIN uc ON puc.iduc = uc.iduc
-    JOIN uc_comp ucc ON uc.iduc = ucc.iduc
-    JOIN competencia c ON ucc.idcomp = c.idcomp
-    ORDER BY p.id_prof, uc.nomeuc, c.nomecomp
-";
-$resCursos = $conn->query($sqlCursos);
-
-$cursosPorProfessorById = [];
-
-if ($resCursos) {
-    while ($row = $resCursos->fetch_assoc()) {
-        $idProf = $row['id_prof'];
-        $idUc = $row['iduc'];
-
-        if (!isset($cursosPorProfessorById[$idProf])) $cursosPorProfessorById[$idProf] = [];
-        if (!isset($cursosPorProfessorById[$idProf][$idUc])) {
-            $cursosPorProfessorById[$idProf][$idUc] = [
-                'nomeuc' => $row['nomeuc'],
-                'competencias' => []
-            ];
-        }
-
-        $exists = false;
-        foreach ($cursosPorProfessorById[$idProf][$idUc]['competencias'] as $c) {
-            if ($c['idcomp'] == $row['idcomp']) {
-                $exists = true;
-                break;
-            }
-        }
-
-        if (!$exists) {
-            $cursosPorProfessorById[$idProf][$idUc]['competencias'][] = [
-                'idcomp' => $row['idcomp'],
-                'nomecomp' => $row['nomecomp']
-            ];
-        }
-    }
-}
-
-// ----------------- Agregar cursos por professor único -----------------
-$cursosPorProfessor = [];
-foreach ($professores as $prof) {
-    $primary = $prof['id_prof'];
-    $allIds = $prof['all_ids'];
-    $merged = [];
-
-    foreach ($allIds as $pid) {
-        if (!isset($cursosPorProfessorById[$pid])) continue;
-
-        foreach ($cursosPorProfessorById[$pid] as $idUc => $ucData) {
-            if (!isset($merged[$idUc])) {
-                $merged[$idUc] = [
-                    'nomeuc' => $ucData['nomeuc'],
-                    'competencias' => []
-                ];
-            }
-
-            foreach ($ucData['competencias'] as $comp) {
-                $found = false;
-                foreach ($merged[$idUc]['competencias'] as $existing) {
-                    if ($existing['idcomp'] == $comp['idcomp']) {
-                        $found = true;
-                        break;
-                    }
-                }
-                if (!$found) $merged[$idUc]['competencias'][] = $comp;
-            }
-        }
-    }
-    $cursosPorProfessor[$primary] = $merged;
-}
-
-// ----------------- Verificar professor selecionado -----------------
-$selectedProf = isset($_GET['id_prof']) ? intval($_GET['id_prof']) : null;
-
-// ----------------- Buscar eventos -----------------
-$eventos = [];
-if ($selectedProf) {
-    $sqlEv = "
-        SELECT a.id, a.id_prof, a.id_uc, a.id_comp, a.data_inicio, a.data_fim, uc.nomeuc, c.nomecomp
-        FROM agenda a
-        JOIN uc ON a.id_uc = uc.iduc
-        JOIN competencia c ON a.id_comp = c.idcomp
-        WHERE a.id_prof = ?
-    ";
-
-    $stmt = $conn->prepare($sqlEv);
-    if ($stmt) {
-        $stmt->bind_param("i", $selectedProf);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        while ($r = $res->fetch_assoc()) {
-            $eventos[] = [
-                'id' => $r['id'],
-                'id_prof' => $r['id_prof'],
-                'id_uc' => $r['id_uc'],
-                'id_comp' => $r['id_comp'],
-                'data_inicio' => $r['data_inicio'],
-                'data_fim' => $r['data_fim'],
-                'nomeuc' => $r['nomeuc'],
-                'nomecomp' => $r['nomecomp']
-            ];
-        }
-        $stmt->close();
-    }
-}
+include "../includes/buscar_dados.php";
+include "../includes/navbar.php";
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -151,17 +11,6 @@ if ($selectedProf) {
     <link rel="stylesheet" href="../css/tabela_agenda.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg" style="background-color: #0a0d8d;">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" style="color:white" href="dashboard.php">AGENDA SENAI</a>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link active" style="color:white" href="tabela_uc.php">Cursos</a></li>
-                <li class="nav-item"><a class="nav-link active" style="color:white" href="tabela_prof.php">Professores</a></li>
-                <li class="nav-item"><a class="nav-link active" style="color:white" href="logout.php">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-
     <div class="container">
         <div style="display:flex; gap:24px; align-items:flex-start;">
 
@@ -213,31 +62,26 @@ if ($selectedProf) {
                 <!-- Formulário -->
                 <form action="salvar_agenda.php" method="POST" id="formSalvar" style="display:none;">
                     <input type="hidden" name="id_prof" id="form_id_prof" value="<?= $selectedProf ? $selectedProf : '' ?>">
-
                     <div class="form-group">
                         <label>Unidade Curricular (UC):</label>
                         <select name="id_uc" id="form_id_uc" class="form-select" required>
                             <option value="">-- selecione a UC --</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label>Competência:</label>
                         <select name="id_comp" id="form_id_comp" class="form-select" required>
                             <option value="">-- selecione a competência --</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label>Data Início:</label>
                         <input type="date" name="data_inicio" class="form-control" required>
                     </div>
-
                     <div class="form-group">
                         <label>Data Fim:</label>
                         <input type="date" name="data_fim" class="form-control" required>
                     </div>
-
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </form>
             </div>
@@ -286,7 +130,6 @@ if ($selectedProf) {
                 formUc.appendChild(opt);
             }
         }
-
         function popularCompetencias(profId, ucId) {
             formComp.innerHTML = '<option value="">-- selecione a competência --</option>';
             if (!profId || !ucId) return;
@@ -298,7 +141,6 @@ if ($selectedProf) {
                 formComp.appendChild(opt);
             });
         }
-
         formUc.addEventListener('change', function() {
             popularCompetencias(formHiddenProf.value, this.value);
         });
@@ -311,10 +153,9 @@ if ($selectedProf) {
             }
             renderCalendar();
         });
-
-        // ========================
+   
         // FUNÇÕES DE EDIÇÃO / EXCLUSÃO
-        // ========================
+
         function editarEvento(id, dia) {
             const ev = eventos.find(e => e.id == id);
             if (!ev) return alert('Evento não encontrado.');
@@ -353,7 +194,6 @@ if ($selectedProf) {
 
             formSalvar.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-
         function excluirEvento(id, dia) {
             if (!confirm('Deseja excluir somente este dia do evento?')) return;
             fetch('excluir_evento.php', {
@@ -369,9 +209,6 @@ if ($selectedProf) {
             .catch(err => alert('Erro ao excluir: ' + err));
         }
 
-        // ========================
-        // RENDERIZAÇÃO DO CALENDÁRIO
-        // ========================
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -396,9 +233,9 @@ if ($selectedProf) {
                     const td = document.createElement('td');
 
                     if (i === 0 && j < firstDay) {
-                        // célula vazia
+    
                     } else if (date > daysInMonth) {
-                        // fim do mês
+                        
                     } else {
                         const divNum = document.createElement('div');
                         divNum.className = 'day-number';
@@ -425,20 +262,17 @@ if ($selectedProf) {
                                 }
                             }
                         }
-
                         if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                             td.classList.add('today');
                         }
 
                         date++;
                     }
-
                     tr.appendChild(td);
                 }
                 calendarBody.appendChild(tr);
             }
         }
-
         function changeMonth(offset) {
             currentDate.setMonth(currentDate.getMonth() + offset);
             renderCalendar();

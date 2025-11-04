@@ -63,16 +63,16 @@ body {
 #nextBtn:hover {
   background-color: #060780;
 }
-
 #monthYear {
   position: absolute;
   top: 110px;
-  left: 50%;
+  left: 35%; /* era 50%, movi levemente pra esquerda */
   transform: translateX(-50%);
   font-weight: bold;
   font-size: 18px;
   color: #0a0d8d;
 }
+
 
 .prof-select {
   position: absolute;
@@ -181,41 +181,3 @@ table.calendar td:hover {
   padding: 4px;
 }
 
-
-/* RESPONSIVO  */
-
-@media (max-width: 999px) {
-  #agendaFormWrapper {
-    position: static;  /* volta ao fluxo da página */
-    width: 100%;
-    margin: 0 0 20px 0;
-    top: auto;
-    right: auto;
-    z-index: 1;
-  }
-}
-
-@media (max-width: 768px) {
-  table.calendar th,
-  table.calendar td {
-    font-size: 12px;
-    height: 80px;
-    padding: 4px;
-  }
-
-  #monthYear {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .prof-select {
-    position: static;
-    margin-top: 8px;
-  }
-
-  #prevBtn,
-  #nextBtn {
-    position: static;
-    margin: 5px;
-  }
-}
