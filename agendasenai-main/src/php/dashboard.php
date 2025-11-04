@@ -83,7 +83,7 @@
 
       .card-img-top {
           width: 100%;
-          height: 250px;
+          height: 300px;
           object-fit: contain;
           display: block;
           background: linear-gradient(135deg, #e8f1ff 0%, #d4e4ff 100%);
