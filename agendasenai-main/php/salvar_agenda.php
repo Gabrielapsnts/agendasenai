@@ -18,6 +18,7 @@ $id_uc = intval($_POST['id_uc']);
 $id_comp = intval($_POST['id_comp']);
 $data_inicio = $_POST['data_inicio'];
 $data_fim = $_POST['data_fim'];
+$turno = $_POST['turno'] ?? null; // <--- NOVO
 $id_evento = isset($_POST['id_evento']) ? intval($_POST['id_evento']) : null;
 $dia_edicao = isset($_POST['dia_edicao']) ? $_POST['dia_edicao'] : null;
 
@@ -43,9 +44,9 @@ if ($id_evento && $dia_edicao) {
 
         if ($inicio == $fim) {
             // Evento de um dia → atualiza normalmente
-            $sqlUp = "UPDATE agenda SET id_prof=?, id_uc=?, id_comp=?, data_inicio=?, data_fim=? WHERE id=?";
+            $sqlUp = "UPDATE agenda SET id_prof=?, id_uc=?, id_comp=?, turno=?, data_inicio=?, data_fim=? WHERE id=?";
             $stmt = $conn->prepare($sqlUp);
-            $stmt->bind_param("iiissi", $id_prof, $id_uc, $id_comp, $data_inicio, $data_fim, $id_evento);
+            $stmt->bind_param("iiisssi", $id_prof, $id_uc, $id_comp, $turno, $data_inicio, $data_fim, $id_evento);
             $stmt->execute();
         }
         else if ($dia_edicao == $inicio) {
@@ -56,10 +57,10 @@ if ($id_evento && $dia_edicao) {
             $stmt->bind_param("si", $novoInicio, $id_evento);
             $stmt->execute();
 
-            $sqlNew = "INSERT INTO agenda (id_prof, id_uc, id_comp, data_inicio, data_fim)
-                       VALUES (?, ?, ?, ?, ?)";
+            $sqlNew = "INSERT INTO agenda (id_prof, id_uc, id_comp, turno, data_inicio, data_fim)
+                       VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sqlNew);
-            $stmt->bind_param("iiiss", $id_prof, $id_uc, $id_comp, $dia_edicao, $dia_edicao);
+            $stmt->bind_param("iiisss", $id_prof, $id_uc, $id_comp, $turno, $dia_edicao, $dia_edicao);
             $stmt->execute();
         }
         else if ($dia_edicao == $fim) {
@@ -70,10 +71,10 @@ if ($id_evento && $dia_edicao) {
             $stmt->bind_param("si", $novoFim, $id_evento);
             $stmt->execute();
 
-            $sqlNew = "INSERT INTO agenda (id_prof, id_uc, id_comp, data_inicio, data_fim)
-                       VALUES (?, ?, ?, ?, ?)";
+            $sqlNew = "INSERT INTO agenda (id_prof, id_uc, id_comp, turno, data_inicio, data_fim)
+                       VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sqlNew);
-            $stmt->bind_param("iiiss", $id_prof, $id_uc, $id_comp, $dia_edicao, $dia_edicao);
+            $stmt->bind_param("iiisss", $id_prof, $id_uc, $id_comp, $turno, $dia_edicao, $dia_edicao);
             $stmt->execute();
         }
         else {
@@ -88,27 +89,27 @@ if ($id_evento && $dia_edicao) {
             $stmt->execute();
 
             // Cria novo evento para o trecho restante (parte depois)
-            $sqlNewRest = "INSERT INTO agenda (id_prof, id_uc, id_comp, data_inicio, data_fim)
-                           VALUES (?, ?, ?, ?, ?)";
+            $sqlNewRest = "INSERT INTO agenda (id_prof, id_uc, id_comp, turno, data_inicio, data_fim)
+                           VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sqlNewRest);
-            $stmt->bind_param("iiiss", $evento['id_prof'], $evento['id_uc'], $evento['id_comp'], $depoisInicio, $fim);
+            $stmt->bind_param("iiisss", $evento['id_prof'], $evento['id_uc'], $evento['id_comp'], $evento['turno'], $depoisInicio, $fim);
             $stmt->execute();
 
             // Cria novo evento para o dia editado
-            $sqlNewOne = "INSERT INTO agenda (id_prof, id_uc, id_comp, data_inicio, data_fim)
-                          VALUES (?, ?, ?, ?, ?)";
+            $sqlNewOne = "INSERT INTO agenda (id_prof, id_uc, id_comp, turno, data_inicio, data_fim)
+                          VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sqlNewOne);
-            $stmt->bind_param("iiiss", $id_prof, $id_uc, $id_comp, $dia_edicao, $dia_edicao);
+            $stmt->bind_param("iiisss", $id_prof, $id_uc, $id_comp, $turno, $dia_edicao, $dia_edicao);
             $stmt->execute();
         }
     }
 }
 else {
     // --- INSERÇÃO NORMAL ---
-    $sql = "INSERT INTO agenda (id_prof, id_uc, id_comp, data_inicio, data_fim) 
-            VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO agenda (id_prof, id_uc, id_comp, turno, data_inicio, data_fim) 
+            VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iiiss", $id_prof, $id_uc, $id_comp, $data_inicio, $data_fim);
+    $stmt->bind_param("iiisss", $id_prof, $id_uc, $id_comp, $turno, $data_inicio, $data_fim);
     $stmt->execute();
 }
 

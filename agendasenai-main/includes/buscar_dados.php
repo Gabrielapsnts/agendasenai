@@ -1,7 +1,7 @@
 <?php
 include "conexao_db.php";
 
-// Buscar professores 
+// 🔹 Buscar professores
 $sqlAllProf = "SELECT id_prof, nomeprof FROM professor ORDER BY nomeprof ASC";
 $resAllProf = $conn->query($sqlAllProf);
 
@@ -18,7 +18,7 @@ if ($resAllProf) {
     }
 }
 
-// Criar lista de professores únicos
+// 🔹 Criar lista de professores únicos
 $professores = [];
 foreach ($idsByName as $name => $ids) {
     $professores[] = [
@@ -28,10 +28,15 @@ foreach ($idsByName as $name => $ids) {
     ];
 }
 
-// Buscar cursos e competências 
+// 🔹 Buscar cursos, competências e turno
 $sqlCursos = "
     SELECT 
-        p.id_prof, uc.iduc, uc.nomeuc, c.idcomp, c.nomecomp
+        p.id_prof, 
+        p.turnos, 
+        uc.iduc, 
+        uc.nomeuc, 
+        c.idcomp, 
+        c.nomecomp
     FROM professor p
     JOIN professor_uc puc ON p.id_prof = puc.id_prof
     JOIN uc ON puc.iduc = uc.iduc
@@ -52,6 +57,7 @@ if ($resCursos) {
         if (!isset($cursosPorProfessorById[$idProf][$idUc])) {
             $cursosPorProfessorById[$idProf][$idUc] = [
                 'nomeuc' => $row['nomeuc'],
+                'turno' => $row['turnos'], // ✅ Adicionado o turno
                 'competencias' => []
             ];
         }
@@ -73,7 +79,7 @@ if ($resCursos) {
     }
 }
 
-//  Agregar cursos por professor único 
+// 🔹 Agregar cursos por professor único
 $cursosPorProfessor = [];
 foreach ($professores as $prof) {
     $primary = $prof['id_prof'];
@@ -87,6 +93,7 @@ foreach ($professores as $prof) {
             if (!isset($merged[$idUc])) {
                 $merged[$idUc] = [
                     'nomeuc' => $ucData['nomeuc'],
+                    'turno' => $ucData['turno'], // ✅ Mantém o turno por UC
                     'competencias' => []
                 ];
             }
@@ -106,14 +113,17 @@ foreach ($professores as $prof) {
     $cursosPorProfessor[$primary] = $merged;
 }
 
-// Verificar professor selecionado 
+// 🔹 Verificar professor selecionado
 $selectedProf = isset($_GET['id_prof']) ? intval($_GET['id_prof']) : null;
 
-//  Buscar eventos 
+// 🔹 Buscar eventos (inclui turno)
 $eventos = [];
 if ($selectedProf) {
     $sqlEv = "
-        SELECT a.id, a.id_prof, a.id_uc, a.id_comp, a.data_inicio, a.data_fim, uc.nomeuc, c.nomecomp
+        SELECT 
+            a.id, a.id_prof, a.id_uc, a.id_comp, a.turno,
+            a.data_inicio, a.data_fim, 
+            uc.nomeuc, c.nomecomp
         FROM agenda a
         JOIN uc ON a.id_uc = uc.iduc
         JOIN competencia c ON a.id_comp = c.idcomp
@@ -131,6 +141,7 @@ if ($selectedProf) {
                 'id_prof' => $r['id_prof'],
                 'id_uc' => $r['id_uc'],
                 'id_comp' => $r['id_comp'],
+                'turno' => $r['turno'], // ✅ Inclui turno no evento
                 'data_inicio' => $r['data_inicio'],
                 'data_fim' => $r['data_fim'],
                 'nomeuc' => $r['nomeuc'],
