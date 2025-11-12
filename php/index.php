@@ -73,7 +73,6 @@
           </span>
         </div>
         <button type="submit" class="btn btn-primary w-100 mb-2">Entrar</button>
-        <button type="button" class="btn btn-secondary w-100">Esqueci a senha</button>
       </form>
     </div>
   </div>

@@ -1,0 +1,346 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: #333;
+  min-height: 100vh;
+}
+
+.calendar-container {
+  max-width: 1400px;
+  margin: 20px auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(10, 13, 141, 0.12);
+  position: relative;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: nowrap;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  height: 40px;
+}
+
+#prevBtn, #nextBtn {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #0a0d8d 0%, #1a1db5 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(10, 13, 141, 0.2);
+  letter-spacing: 0.3px;
+}
+
+#prevBtn:hover, #nextBtn:hover {
+  background: linear-gradient(135deg, #060780 0%, #0f0f9d 100%);
+  box-shadow: 0 6px 12px rgba(10, 13, 141, 0.3);
+  transform: translateY(-2px);
+}
+
+#prevBtn:active, #nextBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(10, 13, 141, 0.2);
+}
+#monthYear {
+  margin: 0;
+  font-weight: bold;
+  font-size: 20px;
+  color: #0a0d8d;
+  text-align: center;
+}
+
+.prof-select {
+  position: absolute;
+  right: 140px;
+  top: 12px;
+}
+table.calendar {
+  width: 70%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table.calendar th,
+table.calendar td {
+  width: 14.28%;
+  height: 140px;
+  border: 1px solid #e0e0e0;
+  vertical-align: top;
+  padding: 10px;
+  position: relative;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+  overflow: hidden;
+}
+
+table.calendar th {
+  background: linear-gradient(135deg, #0a0d8d 0%, #1a1db5 100%);
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+  padding: 12px 8px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.day-number {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #0a0d8d;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  background-color: #f0f4ff;
+}
+
+table.calendar td,
+table.calendar th {
+  font-size: 13px;
+}
+
+.today {
+  background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+  border: 2px solid #ffc107;
+  box-shadow: inset 0 0 8px rgba(255, 193, 7, 0.1);
+}
+
+table.calendar td:hover {
+  background-color: #f0f8ff;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(10, 13, 141, 0.1);
+  border-color: #0a0d8d;
+}
+
+#agendaFormWrapper {
+  width: 360px;
+  position: fixed;
+  top: 140px;
+  right: 60px;
+  background: #fff;
+  border: 1px solid rgba(10,13,141,0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(10, 13, 141, 0.15);
+  padding: 20px;
+  z-index: 1000;
+}
+
+#agendaFormWrapper h5 {
+  color: #0a0d8d;
+  font-weight: 700;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+#agendaFormWrapper label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #24324a;
+  margin-bottom: 6px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+#agendaFormWrapper .form-control,
+#agendaFormWrapper .form-select {
+  border-radius: 6px;
+  border: 1.5px solid #d6dfee;
+  padding: 10px 12px;
+  height: 40px;
+  font-size: 13px;
+  background-color: #fafbff;
+  transition: all 0.2s ease;
+}
+
+#agendaFormWrapper .form-control:focus,
+#agendaFormWrapper .form-select:focus {
+  border-color: #0a0d8d;
+  background-color: #f8faff;
+  box-shadow: 0 0 0 3px rgba(10, 13, 141, 0.1);
+}
+
+#agendaFormWrapper button#btnFecharForm {
+  border-radius: 50%;
+  padding: 4px 10px;
+  font-weight: 600;
+  background-color: #ffe0e0;
+  color: #d32f2f;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#agendaFormWrapper button#btnFecharForm:hover {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+#agendaFormWrapper input[type="date"] {
+  height: 40px;
+}
+
+#agendaFormWrapper .form-group {
+  margin-bottom: 14px;
+}
+
+#agendaFormWrapper button[type="submit"] {
+  margin-top: 10px;
+  font-weight: 600;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #0a0d8d 0%, #1a1db5 100%);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(10, 13, 141, 0.2);
+  letter-spacing: 0.3px;
+}
+
+#agendaFormWrapper button[type="submit"]:hover {
+  background: linear-gradient(135deg, #060780 0%, #0f0f9d 100%);
+  box-shadow: 0 6px 12px rgba(10, 13, 141, 0.3);
+  transform: translateY(-2px);
+}
+
+#agendaFormWrapper button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+
+/* Eventos dentro do calendário */
+.event {
+  line-height: 1.4;
+  font-size: 12px;
+  margin-top: 6px;
+  padding: 8px;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+  border-radius: 6px;
+  border-left: 4px solid #0a0d8d;
+  box-shadow: 0 2px 4px rgba(10, 13, 141, 0.08);
+  transition: all 0.2s ease;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.event:hover {
+  box-shadow: 0 4px 8px rgba(10, 13, 141, 0.15);
+  transform: translateX(2px);
+}
+
+.event b {
+  color: #0a0d8d;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Ações dentro do evento (editar / excluir) */
+.event .event-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.event .event-actions button {
+  font-size: 11px;
+  padding: 5px 10px;
+  line-height: 1;
+  display: inline-block;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.event .event-actions .btn-outline-primary {
+  background-color: #e3f2fd;
+  color: #0a0d8d;
+  border: 1px solid #0a0d8d;
+}
+
+.event .event-actions .btn-outline-primary:hover {
+  background-color: #0a0d8d;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.event .event-actions .btn-outline-danger {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.event .event-actions .btn-outline-danger:hover {
+  background-color: #d32f2f;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Estilos para botões primary genéricos */
+.btn.btn-primary {
+  background: linear-gradient(135deg, #0a0d8d 0%, #1a1db5 100%);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(10, 13, 141, 0.2);
+  letter-spacing: 0.3px;
+}
+
+.btn.btn-primary:hover {
+  background: linear-gradient(135deg, #060780 0%, #0f0f9d 100%);
+  box-shadow: 0 6px 12px rgba(10, 13, 141, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botão Inserir horário */
+#btnInserir {
+  padding: 10px 24px !important;
+  font-size: 14px !important;
+  font-weight: 700;
+  border-radius: 6px !important;
+}
+
+/* Selects genéricos */
+.form-select {
+  border-radius: 6px;
+  border: 1.5px solid #d6dfee;
+  padding: 10px 12px;
+  height: 40px;
+  background-color: #fafbff;
+  transition: all 0.2s ease;
+  font-size: 13px;
+}
+
+.form-select:focus {
+  border-color: #0a0d8d;
+  box-shadow: 0 0 0 3px rgba(10, 13, 141, 0.1);
+}
+
